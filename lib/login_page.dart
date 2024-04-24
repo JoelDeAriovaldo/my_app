@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'home_page.dart'; // Import the HomePage widget
+import 'package:fluttertoast/fluttertoast.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,8 +18,7 @@ class _LoginPageState extends State<LoginPage> {
     final String password = passwordController.text;
 
     final response = await http.post(
-      Uri.parse(
-          'https://my-next-api-pi.vercel.app/api/login'), // Replace with your actual server URL
+      Uri.parse('https://my-next-api-pi.vercel.app/api/login'),
       body: json.encode({
         'email': email,
         'password': password,
@@ -31,14 +31,29 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       print('Login successful: ${responseData['message']}');
-      // Navigate to HomePage upon successful login
+      Fluttertoast.showToast(
+          msg: "Login successfu",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } else {
       print('Login failed: ${response.statusCode}');
-      // Handle failed login, e.g., show an error message
+      // Show a toast message for failed login
+      Fluttertoast.showToast(
+          msg: "Login failed",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 

@@ -18,7 +18,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchItems() async {
     final response = await http
-        .get(Uri.parse('https://my-next-api-pi.vercel.app/api/login'));
+        .get(Uri.parse('https://my-next-api-pi.vercel.app/api/items'));
 
     if (response.statusCode == 200) {
       setState(() {
