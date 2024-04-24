@@ -1,6 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<dynamic> items = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchItems();
+  }
+
+  Future<void> fetchItems() async {
+    final response = await http
+        .get(Uri.parse('https://my-next-api-pi.vercel.app/api/login'));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        items = jsonDecode(response.body);
+      });
+    } else {
+      throw Exception('Failed to load items');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,16 +36,10 @@ class HomePage extends StatelessWidget {
         title: Text('Home'),
       ),
       body: ListView.builder(
-        itemCount: 10, // Substitua pelo tamanho da sua lista
+        itemCount: items.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('Item $index'),
-            onTap: () {
-              // Implemente a lógica de seleção do item aqui
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Item $index selecionado')),
-              );
-            },
+            title: Text(items[index]['name']),
           );
         },
       ),
